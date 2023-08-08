@@ -1,14 +1,14 @@
 
-let test=document.getElementsByTagName('li')
+let test=document.querySelector('.list-group-item:nth-child(2)')
+test.style.backgroundColor='green'
+let test2=document.querySelector('.list-group-item:nth-child(3)')
+test2.style.display='none'
+let test3=document.querySelectorAll('li')
+test3[1].style.color='green'
+let test4=document.querySelectorAll('li:nth-child(odd)')
 
-
-for(let i=0;i<test.length;i++){
+for(let i=0;i<test4.length;i++){
     
-    test[i].style.color='red'
+    test4[i].style.backgroundColor='green'
 }
 
-let test2=document.getElementsByClassName('list-group-item')
-for(let i=0;i<test2.length;i++){
-    
-    test2[i].style.color='blue'
-}
