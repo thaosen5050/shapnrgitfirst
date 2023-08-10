@@ -1,52 +1,55 @@
 let form=document.getElementById('my-form');
-let del=document.getElementById('Del')
 
 let userList=document.getElementById('users')
-let x=1;
+
+
 form.addEventListener('submit' , formSub);
-del.addEventListener('click' , delUser);
+userList.addEventListener('click' , delUser);
+userList.addEventListener('click' , editUser);
 
 function formSub(e){
     let Name=document.getElementById('name').value;
     let Mail=document.getElementById('email').value;
-    let obj={
-        nameobj : Name ,
-        mailobj : Mail
-    }
-
-    let objStrng=JSON.stringify(obj);
-    localStorage.setItem( Mail , objStrng)
-    x=x+1;
+    
+    localStorage.setItem( Mail , Name)
+    
     e.preventDefault();
-    //console.log(JSON.parse(localStorage.getItem(Mail)))
+    
     let newName=document.createElement('li');
     newName.className='item';
-    newName.appendChild(document.createTextNode('Name: '+Name+' '+' Email: '+Mail));
+    newName.appendChild(document.createTextNode(Name+' '));
+    newName.appendChild(document.createTextNode(Mail))
+
+    let newBtnEdit=document.createElement('button');
+    newBtnEdit.appendChild(document.createTextNode('Edit'));
+    newName.appendChild(newBtnEdit);
+
+    let newBtn=document.createElement('button');
+    newBtn.appendChild(document.createTextNode('Delete'));
+    newName.appendChild(newBtn);
     
     userList.appendChild(newName);
 
 }
 
 function delUser(e){
-   
-        let Name=document.getElementById('name').value;
-        let Mail=document.getElementById('email').value;
-        let delList=document.getElementById('users');
-        let objD={
-            nameobj : Name ,
-            mailobj : Mail
-        }
-    
-        let objStrngD=JSON.stringify(objD);
-        if (localStorage.getItem(Mail)==objStrngD){
-            localStorage.removeItem(Mail);
-        }
-        
-        console.log(delList.children.length)
-        for (let i=0;i<delList.children.length;i++){
-            if (delList.children[i].textContent=='Name: '+Name+' '+' Email: '+Mail){
-                delList.removeChild(delList.children[i])
-            }
-        }
+    let delEle=e.target.parentElement;
+    localStorage.removeItem(delEle.firstChild.nextSibling.textContent)
+    userList.removeChild(delEle);
+}
 
+function editUser(e){
+    let edtEle=e.target.parentElement;
+
+    let oldName=edtEle.firstChild.textContent;
+    let oldMail=edtEle.firstChild.nextSibling.textContent;
+    
+    document.getElementById('name').value=oldName;
+    document.getElementById('email').value=oldMail;
+    
+     
+
+    localStorage.removeItem(edtEle.firstChild.nextSibling.textContent)
+
+    userList.removeChild(edtEle);
 }
