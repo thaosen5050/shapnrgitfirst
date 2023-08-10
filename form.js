@@ -1,9 +1,10 @@
 let form=document.getElementById('my-form');
-//console.log(localStorage.getItem('name1'))
-//console.log(JSON.parse(localStorage.getItem('name1')))
-let userlist=document.getElementById('users')
+let del=document.getElementById('Del')
+
+let userList=document.getElementById('users')
 let x=1;
 form.addEventListener('submit' , formSub);
+del.addEventListener('click' , delUser);
 
 function formSub(e){
     let Name=document.getElementById('name').value;
@@ -17,10 +18,35 @@ function formSub(e){
     localStorage.setItem( Mail , objStrng)
     x=x+1;
     e.preventDefault();
-    //console.log(Name)
+    //console.log(JSON.parse(localStorage.getItem(Mail)))
     let newName=document.createElement('li');
     newName.className='item';
     newName.appendChild(document.createTextNode('Name: '+Name+' '+' Email: '+Mail));
-    userlist.appendChild(newName);
+    
+    userList.appendChild(newName);
+
+}
+
+function delUser(e){
+   
+        let Name=document.getElementById('name').value;
+        let Mail=document.getElementById('email').value;
+        let delList=document.getElementById('users');
+        let objD={
+            nameobj : Name ,
+            mailobj : Mail
+        }
+    
+        let objStrngD=JSON.stringify(objD);
+        if (localStorage.getItem(Mail)==objStrngD){
+            localStorage.removeItem(Mail);
+        }
+        
+        console.log(delList.children.length)
+        for (let i=0;i<delList.children.length;i++){
+            if (delList.children[i].textContent=='Name: '+Name+' '+' Email: '+Mail){
+                delList.removeChild(delList.children[i])
+            }
+        }
 
 }
