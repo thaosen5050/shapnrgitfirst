@@ -10,11 +10,12 @@ userList.addEventListener('click' , editUser);
 axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData')
 .then(res=>{
     let axobj=res.data;
-    
+    //console.log(res)
     axobj.forEach((x)=>{
             let crudName=x.Name;
             let crudMail=x.Mail;
-            
+            //let id=x._id;
+            //console.log(id);
             let newName=document.createElement('li');
             newName.className='item';
             newName.appendChild(document.createTextNode(crudName+' '));
@@ -70,8 +71,31 @@ function formSub(e){
 
 function delUser(e){
     let delEle=e.target.parentElement;
+
+    let oldName=delEle.firstChild.textContent;
+    let oldMail=delEle.firstChild.nextSibling.textContent;
    // localStorage.removeItem(delEle.firstChild.nextSibling.textContent)
-   axios.delete()
+   axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData')
+    .then(res=>{
+    let axobj=res.data;
+    
+    axobj.forEach((x)=>{
+            let crudName=x.Name;
+            let crudMail=x.Mail;
+            let id=x._id;
+            if (oldMail==crudMail){
+                let obj={
+                    crudName,
+                    crudMail,
+                };
+                axios.delete(`https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData/${id}`)
+                .then(res=console.log(obj)
+                )}
+        })
+    })
+    .catch(err=>console.log(err))
+    
+    
     userList.removeChild(delEle);
 }
 
