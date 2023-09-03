@@ -2,19 +2,18 @@ let form=document.getElementById('my-form');
 
 let userList=document.getElementById('users')
 
-
 form.addEventListener('submit' , formSub);
-userList.addEventListener('click' , delUser);
-userList.addEventListener('click' , editUser);
 
-
-axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData')
+let flag=0;
+axios.get('https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData')
 .then(res=>{
     let axobj=res.data;
+    let num=0;
     //console.log(res)
     axobj.forEach((x)=>{
             let crudName=x.Name;
             let crudMail=x.Mail;
+            
             //let id=x._id;
             //console.log(id);
             let newName=document.createElement('li');
@@ -25,19 +24,22 @@ axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationD
             let newBtnEdit=document.createElement('button');
             newBtnEdit.appendChild(document.createTextNode('Edit'));
             newName.appendChild(newBtnEdit);
+            newBtnEdit.addEventListener('click' , editUser);
 
             let newBtn=document.createElement('button');
             newBtn.appendChild(document.createTextNode('Delete'));
             newName.appendChild(newBtn);
+            newBtn.addEventListener('click' , delUser);
 
             userList.appendChild(newName);
+            num++;
         })
-    
-})
-.catch(err=>console.log(err))
+}).catch(err=>console.log(err))
 
-
-
+// for (let i=0;i<userList.length;i++){
+//     userList.children[i].a
+// }
+let num=0;
 function formSub(e ){
     let Name=document.getElementById('name').value;
     let Mail=document.getElementById('email').value;
@@ -47,15 +49,17 @@ function formSub(e ){
        Name ,
         Mail 
     };
-    
-        axios.post('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData' , obj)
+    if (flag==0){
+        axios.post('https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData' , obj)
         .then(res=>console.log(res))
         .catch(err=>console.log(err))
+    }else{
+        axios.put(`https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData/${flag}` ,obj)
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err))
+     }
     
-    
-    
-    
-    e.preventDefault();
+     e.preventDefault();
 
     let newName=document.createElement('li');
     newName.className='item';
@@ -65,22 +69,26 @@ function formSub(e ){
     let newBtnEdit=document.createElement('button');
     newBtnEdit.appendChild(document.createTextNode('Edit'));
     newName.appendChild(newBtnEdit);
+    
+    newBtnEdit.addEventListener('click' , editUser);
 
     let newBtn=document.createElement('button');
     newBtn.appendChild(document.createTextNode('Delete'));
     newName.appendChild(newBtn);
+    
+    newBtn.addEventListener('click' , delUser);
 
     userList.appendChild(newName);
-
+    console.log(userList)
+     num++;
 }
 
 function delUser(e){
     let delEle=e.target.parentElement;
-
     let oldName=delEle.firstChild.textContent;
     let oldMail=delEle.firstChild.nextSibling.textContent;
    // localStorage.removeItem(delEle.firstChild.nextSibling.textContent)
-   axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData')
+   axios.get('https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData')
     .then(res=>{
     let axobj=res.data;
     
@@ -93,27 +101,25 @@ function delUser(e){
                     crudName,
                     crudMail,
                 };
-                axios.delete(`https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData/${id}`)
+                axios.delete(`https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData/${id}`)
                 .then(res=console.log(obj)
                 )}
         })
     })
     .catch(err=>console.log(err))
     
-    
     userList.removeChild(delEle);
 }
 
 function editUser(e){
     let edtEle=e.target.parentElement;
-
     let oldName=edtEle.firstChild.textContent;
     let oldMail=edtEle.firstChild.nextSibling.textContent;
 
     document.getElementById('name').value=oldName;
     document.getElementById('email').value=oldMail;
 
-    axios.get('https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData')
+    axios.get('https://crudcrud.com/api/cd2e29aec79840cda2ef97f5ff30b9d9/aplicationData')
     .then(res=>{
     let axobj=res.data;
     
@@ -126,10 +132,7 @@ function editUser(e){
                     crudName,
                     crudMail,
                 };
-                
-                 axios.delete(`https://crudcrud.com/api/4017a8c2370f4e20acfaa604ad9fb532/aplicationData/${id}`)
-                 .then(res=console.log(obj))
-                
+                flag=id;
             }
         })
     })
