@@ -26,14 +26,28 @@ const server = http.createServer((req,res)=>{
         return res.end()
     }
     if (url==='/'){
-        res.write('<html>')
-        res.write('<head><title>Message</title></head>')
-        res.write('<body><form action="/message" method="POST"><input type="text" name="mess"><button type="submit">send</button></form></body>')
-        res.write('</html>')
-        return res.end()
+        
+        return fs.readFile('message.txt' , 'utf-8' ,(err,data)=>{
+            
+            res.write('<html>')
+            res.write('<head><title>ReadFile</title></head>')
+            res.write(`<body><form action="/message" method="POST"><label for="datad">${data}</label><br>`)
+            res.write('<input type="text" id="datad" name="mess"><button type="submit">send</button></form></body>')
+            res.write('</html>')
+            return res.end()
+        })
     }
     if (url==='/message' && method==='POST'){
-        fs.writeFileSync('message.txt', 'Hello')
+        const body=[]
+        req.on('data', (chunk)=>{
+            body.push(chunk)
+        })
+        req.on('end' , ()=>{
+            const parsedBody=Buffer.concat(body).toString()
+            const content=parsedBody.split('=')[1]
+            fs.writeFileSync('message.txt', content)
+        })
+        
         res.statusCode=302
         res.setHeader('Location', '/')
         return res.end()
