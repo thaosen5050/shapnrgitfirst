@@ -1,0 +1,16 @@
+{
+  "name": "shapnrgitfirst",
+  "version": "1.0.0",
+  "description": "Node.js Module",
+  "main": "bck_app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon bck_app.js",
+    "start-server": "node bck_app.js"
+  },
+  "author": "Rohit Thaosen",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
