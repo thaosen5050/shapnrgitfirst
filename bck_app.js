@@ -1,33 +1,23 @@
 const express=require('express')
+const path=require('path')
+
 const bodyParser=require('body-parser')
-const fs=require('fs');
 
-const chat=express()
- 
-chat.use(bodyParser.urlencoded({extended : false}))
+const adminRoutes=require('./routes/admin')
+const shopRoutes=require('./routes/shop')
 
-chat.get('/login' , (req,res,next)=>{
-    res.send('<form action="/details" method="POST"><input type="text" name="username"><button type="submit">login</button></form>')
+
+const app=express()
+
+app.use(bodyParser.urlencoded({extended : false}))
+app.use(express.static(path.join(__dirname, 'public')))
+app.use('/admin',adminRoutes)
+app.use(shopRoutes)
+
+
+
+app.use((req,res,next)=>{
+    res.status(404).sendFile(path.join(__dirname, 'views' , '404.html'))
 })
 
-chat.post('/details' , (req,res,next)=>{
-    fs.writeFileSync('user.txt' , req.body.username)
-    res.redirect('/')
-})
-
-chat.get('/' , (req,res,next)=>{
-    fs.readFile('chat.txt' , 'utf-8' , (err,data)=>{
-    res.send(`<form action="/chat" method="POST"><label for="history">${data}</label><br><input type="text" id="history" name="text"><button type="submit">send</button></form>`)
-   })
-}) 
-
-chat.post('/chat' , (req,res,next)=>{
-    fs.readFile('chat.txt' , 'utf-8' , (err,data)=>{
-        let user=fs.readFileSync('user.txt' ,'utf-8')
-        let content=data.replace(data,data+'  '+user+':'+req.body.text)
-        fs.writeFileSync('chat.txt' , content, 'utf-8')
-        res.redirect('/')
-    })
-})
-
-chat.listen(4000)
+app.listen(3000)
