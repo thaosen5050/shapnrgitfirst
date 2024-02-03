@@ -1,26 +1,22 @@
 const express=require('express')
 const path=require('path')
 
+
 const rootDir=require('../util/path')
+const productController= require('../contollers/products')
+const contactController = require('../contollers/contactUs')
+const successController = require('../contollers/success')
 
 const router=express.Router()
 
-router.get('/add-product', (req, res, next)=>{
-    
-    res.sendFile(path.join(rootDir, 'views' , 'add-product.html'))
-})
+router.get('/add-product', productController.getAddProduct)
 
-router.get('/contact', (req, res, next)=>{
-    res.sendFile(path.join(rootDir, 'views' , 'contact.html'))
-})
+router.get('/contact', contactController.getContact)
 
-router.post('/product' , (req,res,next)=>{                  //add-product possible too since diferrent methods
-    console.log(req.body)
-    console.log('name='+req.body.title+' size='+req.body.size)
-    res.redirect('/')
-})
-router.post('/success' , (req,res,next)=>{                  //add-product possible too since diferrent methods
-    res.sendFile(path.join(rootDir, 'views' , 'success.html'))
-})
+//add-product possible too since diferrent methods
+router.post('/product' , productController.postAddProduct)
+
+//add-product possible too since diferrent methods
+router.post('/success' , successController.postSuccess )
 
 module.exports=router
